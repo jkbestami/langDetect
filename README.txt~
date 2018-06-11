@@ -1,0 +1,7 @@
+To run the word evaluation program, use the following command:
+    ./gradlew runEval
+From here, you can have the neural network guess the language of an input word.
+
+To open the GUI for Encog, use the following command:
+    gui/encogGui
+In the gui, navigate to the directory src/main/resources. The trained neural network is vectors_train.egb.

@@ -1,0 +1,79 @@
+
+
+import java.io.File;
+  
+import java.io.*;
+import java.util.*;
+
+import org.encog.Encog;
+
+import org.encog.mathutil.randomize.ConsistentRandomizer;
+import org.encog.ml.data.MLData;
+import org.encog.ml.data.MLDataPair;
+import org.encog.ml.data.MLDataSet;
+import org.encog.ml.data.basic.BasicMLData;
+import org.encog.ml.data.basic.BasicMLDataSet;
+import org.encog.ml.train.MLTrain;
+import org.encog.neural.networks.BasicNetwork;
+import org.encog.neural.networks.training.propagation.resilient.ResilientPropagation;
+import org.encog.persist.EncogDirectoryPersistence;
+import org.encog.util.simple.EncogUtility;
+
+/**
+ * This example shows how to use Encog persistence to store a neural network 
+ * to an EG file.  The EG file is cross-platform and can be shared between 
+ * Encog Java and Encog C#.
+ *
+ */
+public class Eval {
+
+        BasicNetwork net;
+
+
+	
+	public Eval(String s){
+	
+	         net = (BasicNetwork)EncogDirectoryPersistence.loadObject(new File(s));
+	}
+	
+	
+        public void evaluate(){
+	
+		      	double[] inArray = new double[16];
+	try {
+
+		BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/input.txt"));
+		String line = reader.readLine();
+		String[] s = line.split(",");
+		for(int i = 0; i<s.length ; i++){
+		  inArray[i] = Double.parseDouble(s[i]);
+		}
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+	BasicMLData input = new BasicMLData(inArray);
+	input.setData(inArray);
+	for(int i = 0; i<inArray.length ; i++){
+		  System.out.println("i: "  + inArray[i]);
+		}
+	System.out.println("mldata: " + input);
+	
+	MLData output = net.compute(input);
+	System.out.println("output: " + output);
+	}
+	
+        
+	public static void main(String[] args) {
+	
+	 String FILENAME = "src/main/resources/Vectors_train.eg";
+		try {
+			Eval program = new Eval(FILENAME);
+			program.evaluate();
+		} catch (Throwable t) {
+			t.printStackTrace();
+		} finally {
+			Encog.getInstance().shutdown();
+		}
+
+	}
+}
